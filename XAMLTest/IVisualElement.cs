@@ -37,6 +37,28 @@ public interface IVisualElement : IEquatable<IVisualElement>
     Task<IVisualElement<TElement>> GetElement<TElement>(string query);
 
     /// <summary>
+    /// Find an element given a query. The query string is made up of several parts.
+    /// ~&lt;Name&gt; - Search for an element by Name. This is the default query behavior if no prefix is specified.
+    /// /&lt;Type Name&gt; - Search for an element by its given class name. This type name may be a base class name as well. Optionally this query part may also include a [&lt;<Index&gt;] suffix to retrieve objects are a particular index.
+    /// .&lt;Property Name&gt; - Search for an element as the property of another element. This must follow anoter query part.
+    /// [&lt;Property Query&gt;] - Search for an element with a property query. The property query should be in the form &lt;Property Name&gt;=&lt;Property Value&gt;
+    /// </summary>
+    /// <param name="query">The element query.</param>
+    /// <returns>The found element or null if it is not found</returns>
+    Task<IVisualElement?> FindElement(string query);
+
+    /// <summary>
+    /// Find an element given a query. The query string is made up of several parts.
+    /// ~&lt;Name&gt; - Search for an element by Name. This is the default query behavior if no prefix is specified.
+    /// /&lt;Type Name&gt; - Search for an element by its given class name. This type name may be a base class name as well. Optionally this query part may also include a [&lt;<Index&gt;] suffix to retrieve objects are a particular index.
+    /// .&lt;Property Name&gt; - Search for an element as the property of another element. This must follow anoter query part.
+    /// [&lt;Property Query&gt;] - Search for an element with a property query. The property query should be in the form &lt;Property Name&gt;=&lt;Property Value&gt;
+    /// </summary>
+    /// <param name="query">The element query.</param>
+    /// <returns>The found element or null if not found</returns>
+    Task<IVisualElement<TElement>?> FindElement<TElement>(string query);
+
+    /// <summary>
     /// Retrieve a property's value
     /// </summary>
     /// <param name="name">The name of the property</param>
@@ -77,9 +99,23 @@ public interface IVisualElement : IEquatable<IVisualElement>
     /// <returns>The smallest bounding rectangle encompassing the element in screen coordinates.</returns>
     Task<Rect> GetCoordinates();
 
+    /// <summary>
+    /// Registers for an event by its name.
+    /// </summary>
+    /// <param name="name">The name of the event</param>
+    /// <returns></returns>
     Task<IEventRegistration> RegisterForEvent(string name);
+    /// <summary>
+    /// Un-regsiter an event that was previously registered. <see cref="RegisterForEvent(string)"/>
+    /// </summary>
+    /// <param name="eventRegistration">The event registration to unregister.</param>
+    /// <returns></returns>
     Task UnregisterEvent(IEventRegistration eventRegistration);
 
+    /// <summary>
+    /// Moves the keyboard focus to this element if it is focusable.
+    /// </summary>
+    /// <returns></returns>
     Task MoveKeyboardFocus();
 
     /// <summary>
@@ -97,7 +133,7 @@ public interface IVisualElement : IEquatable<IVisualElement>
     Task<Point> SendInput(MouseInput mouseInput);
 
     /// <summary>
-    /// Applys highlighting to the control.
+    /// Applies highlighting to the control.
     /// </summary>
     /// <returns></returns>
     Task Highlight(HighlightConfig highlightConfig);
